@@ -19,6 +19,9 @@
     <ClCompile Include="GameLogic.cpp">
       <Filter>Файлы ресурсов</Filter>
     </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Файлы ресурсов</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TileTypes.h">
@@ -46,6 +49,9 @@
       <Filter>Файлы ресурсов</Filter>
     </ClInclude>
     <ClInclude Include="StaticObject.h">
+      <Filter>Файлы ресурсов</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
       <Filter>Файлы ресурсов</Filter>
     </ClInclude>
   </ItemGroup>

@@ -20,7 +20,7 @@ int main()
         {'B', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'B'},
         {'B', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'B'},
         {'B', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'B'},
-        {'B', 'B', 'S', 'S', 'S', 'S', 'S', 'S', 'B'},
+        {'B', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'B'},
         {'B', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'B'},
         {'B', 'S', 'B', 'S', 'S', 'B', 'S', 'S', 'B'},
         {'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B'}
@@ -44,12 +44,64 @@ int main()
 
 		world.level = createLevel(levelDescriptor, DRAW_SCALE);
 
-		world.player.staticObject.sprite.setTexture(tileSetTexture);
-		world.player.staticObject.sprite.setTextureRect(sf::IntRect(121, 49, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
-		world.player.staticObject.sprite.setScale(DRAW_SCALE);
+		{
+			world.player.staticObject.sprite.setTexture(tileSetTexture);
+			world.player.staticObject.sprite.setTextureRect(sf::IntRect(121, 49, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+			world.player.staticObject.sprite.setScale(DRAW_SCALE);
 
-		world.player.staticObject.rect = sf::FloatRect(100.f, 400.f, TEXTURE_TILE_SIZE.x * DRAW_SCALE.x, TEXTURE_TILE_SIZE.y * DRAW_SCALE.y);
+			world.player.staticObject.sprite.setOrigin(TEXTURE_TILE_SIZE.x / 2.f, TEXTURE_TILE_SIZE.y / 2.f);
 
+			world.player.staticObject.rect = sf::FloatRect(100.f, 400.f, TEXTURE_TILE_SIZE.x * DRAW_SCALE.x, TEXTURE_TILE_SIZE.y * DRAW_SCALE.y);
+
+			{
+				world.player.walkAnimation.texture = tileSetTexture;
+				world.player.walkAnimation.speed = 15.f;
+				world.player.walkAnimation.frames.push_back(sf::IntRect(7, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(36, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(65, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(94, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(122, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(152, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(178, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(203, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(229, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(250, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(272, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(293, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(316, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(338, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(363, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(388, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(415, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(441, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(468, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(495, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(522, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(548, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(574, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(599, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.walkAnimation.frames.push_back(sf::IntRect(621, 52, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+			}
+			{
+				world.player.idleAnimation.texture = tileSetTexture;
+				world.player.idleAnimation.speed = 0.f;
+				world.player.idleAnimation.frames.push_back(sf::IntRect(7, 10, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+			}
+			{
+				world.player.jumpAnimation.texture = tileSetTexture;
+				world.player.jumpAnimation.speed = 15.f;
+				world.player.jumpAnimation.frames.push_back(sf::IntRect(682, 103, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.jumpAnimation.frames.push_back(sf::IntRect(713, 103, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.jumpAnimation.frames.push_back(sf::IntRect(744, 101, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.jumpAnimation.frames.push_back(sf::IntRect(775, 101, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.jumpAnimation.frames.push_back(sf::IntRect(800, 98, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.jumpAnimation.frames.push_back(sf::IntRect(829, 100, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.jumpAnimation.frames.push_back(sf::IntRect(857, 98, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.jumpAnimation.frames.push_back(sf::IntRect(886, 96, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.jumpAnimation.frames.push_back(sf::IntRect(914, 97, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+				world.player.jumpAnimation.frames.push_back(sf::IntRect(937, 97, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+			}
+		}
 		{
 			Enemy enemy;
 

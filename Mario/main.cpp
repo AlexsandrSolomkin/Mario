@@ -5,13 +5,14 @@ int main()
     const sf::Vector2i TEXTURE_TILE_SIZE(30.f, 30.f);
     const sf::Vector2f DRAW_SCALE(3.f, 3.f);
     const sf::Vector2f TILE_SIZE(TEXTURE_TILE_SIZE.x * DRAW_SCALE.x, TEXTURE_TILE_SIZE.y * DRAW_SCALE.y);
-    const float GRAVITY = -600.f;
     const sf::Vector2f GROUND_SPRITE_SIZE(30.f, 30.f);
     
     sf::RenderWindow window(sf::VideoMode(800, 600), "Mario");
 
     sf::Texture tileSetTexture;
     tileSetTexture.loadFromFile("Resources/MarioTextures_v1.png");
+    sf::Texture tileSetTexture2;
+    tileSetTexture2.loadFromFile("Resources/MarioTextures_v2.png");
 
     LevelDescriptor levelDescriptor;
     levelDescriptor.levelSymbols =
@@ -19,9 +20,9 @@ int main()
         {'B', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'B'},
         {'B', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'B'},
         {'B', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'B'},
+        {'B', 'B', 'S', 'S', 'S', 'S', 'S', 'S', 'B'},
         {'B', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'B'},
-        {'B', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'B'},
-        {'B', 'S', 'S', 'B', 'S', 'B', 'S', 'S', 'B'},
+        {'B', 'S', 'B', 'S', 'S', 'B', 'S', 'S', 'B'},
         {'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B'}
     };
 
@@ -29,41 +30,116 @@ int main()
     levelDescriptor.tileTextureTypeToTextureRect[ETileTextureType::Empty] = sf::IntRect(1460, 788, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y);
     levelDescriptor.tileTextureTypeToTextureRect[ETileTextureType::Ground] = sf::IntRect(363, 531, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y);
 
-    Level level = createLevel(levelDescriptor, DRAW_SCALE);
+	sf::Font font;
+	font.loadFromFile("Resources/Fonts/Roboto-Bold.ttf");
 
-    Player player;
-    player.playerSprite.setTexture(tileSetTexture);
-    player.playerSprite.setTextureRect(sf::IntRect(121, 49, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
-    player.playerSprite.setScale(DRAW_SCALE);
+	while (window.isOpen())
+	{
+		World world;
 
-    player.playerRect = sf::FloatRect(100.f, 400.f, TEXTURE_TILE_SIZE.x * DRAW_SCALE.x, TEXTURE_TILE_SIZE.y * DRAW_SCALE.y);
+		world.scoreText.setFont(font);
+		world.scoreText.setCharacterSize(36);
+		world.scoreText.setPosition(300.f, 50.f);
+		world.scoreText.setFillColor(sf::Color::White);
 
-    sf::Clock clock;
+		world.level = createLevel(levelDescriptor, DRAW_SCALE);
 
-    while (window.isOpen())
-    {
-        sf::sleep(sf::seconds(0.001f));
+		world.player.staticObject.sprite.setTexture(tileSetTexture);
+		world.player.staticObject.sprite.setTextureRect(sf::IntRect(121, 49, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+		world.player.staticObject.sprite.setScale(DRAW_SCALE);
 
-        float clockDeltaSeconds = clock.getElapsedTime().asSeconds();
-        clock.restart();
+		world.player.staticObject.rect = sf::FloatRect(100.f, 400.f, TEXTURE_TILE_SIZE.x * DRAW_SCALE.x, TEXTURE_TILE_SIZE.y * DRAW_SCALE.y);
 
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-            {
-                window.close();
-            }
+		{
+			Enemy enemy;
 
-            handleWindowEvent(event, player);
-        }
+			enemy.staticObject.sprite.setTexture(tileSetTexture2);
+			enemy.staticObject.sprite.setTextureRect(sf::IntRect(122.f, 1182.f, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+			enemy.staticObject.sprite.setScale(DRAW_SCALE);
 
-        handleInput(player);
+			enemy.staticObject.rect = sf::FloatRect(400.f, 450.f, TEXTURE_TILE_SIZE.x * DRAW_SCALE.x, TEXTURE_TILE_SIZE.y * DRAW_SCALE.y);
 
-        updateGame(player, level, GRAVITY, clockDeltaSeconds, TILE_SIZE);
+			enemy.enemySpeed = 150.f;
+			enemy.enemyVelocity.x = -enemy.enemySpeed;
 
-        drawGame(window, level, player, TILE_SIZE);
-    }
+			world.enemies.push_back(enemy);
+		}
+		{
+			Enemy enemy;
+
+			enemy.staticObject.sprite.setTexture(tileSetTexture2);
+			enemy.staticObject.sprite.setTextureRect(sf::IntRect(122.f, 1182.f, TEXTURE_TILE_SIZE.x, TEXTURE_TILE_SIZE.y));
+			enemy.staticObject.sprite.setScale(DRAW_SCALE);
+
+			enemy.staticObject.rect = sf::FloatRect(300.f, 450.f, TEXTURE_TILE_SIZE.x * DRAW_SCALE.x, TEXTURE_TILE_SIZE.y * DRAW_SCALE.y);
+
+			enemy.enemySpeed = 150.f;
+			enemy.enemyVelocity.x = -enemy.enemySpeed;
+
+			world.enemies.push_back(enemy);
+		}
+		{
+			Coin coin;
+
+			const sf::Vector2i COIN_TEXTURES_SIZE(21, 30);
+
+			coin.staticObject.sprite.setTexture(tileSetTexture2);
+			coin.staticObject.sprite.setTextureRect(sf::IntRect(98.f, 97.f, COIN_TEXTURES_SIZE.x, COIN_TEXTURES_SIZE.y));
+			coin.staticObject.sprite.setScale(DRAW_SCALE);
+
+			coin.staticObject.rect = sf::FloatRect(465.f, 360.f, COIN_TEXTURES_SIZE.x * DRAW_SCALE.x, COIN_TEXTURES_SIZE.y * DRAW_SCALE.y);
+
+			world.coins.push_back(coin);
+		}
+		{
+			Coin coin;
+
+			const sf::Vector2i COIN_TEXTURES_SIZE(21, 30);
+
+			coin.staticObject.sprite.setTexture(tileSetTexture2);
+			coin.staticObject.sprite.setTextureRect(sf::IntRect(98.f, 97.f, COIN_TEXTURES_SIZE.x, COIN_TEXTURES_SIZE.y));
+			coin.staticObject.sprite.setScale(DRAW_SCALE);
+
+			coin.staticObject.rect = sf::FloatRect(300.f, 450.f, COIN_TEXTURES_SIZE.x * DRAW_SCALE.x, COIN_TEXTURES_SIZE.y * DRAW_SCALE.y);
+
+			world.coins.push_back(coin);
+		}
+
+		sf::Clock clock;
+
+		while (!world.bGameOver && window.isOpen())
+		{
+			sf::sleep(sf::seconds(0.001f));
+
+			float clockDeltaSeconds = clock.getElapsedTime().asSeconds();
+			clock.restart();
+
+			sf::Event event;
+			while (window.pollEvent(event))
+			{
+				if (event.type == sf::Event::Closed)
+				{
+					window.close();
+				}
+
+				handleWindowEvent(event, world.player);
+
+				if (event.type == sf::Event::KeyPressed)
+				{
+					if (event.key.code == sf::Keyboard::P)
+					{
+						world.bGameOver = true;
+					}
+				}
+			}
+
+			handleInput(world.player);
+
+			updateGame(world, clockDeltaSeconds, TILE_SIZE);
+
+			drawGame(window, world, TILE_SIZE);
+		}
+	}
 
     return 0;
 }

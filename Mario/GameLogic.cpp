@@ -3,6 +3,8 @@
 
 void handleInput(Player& player)
 {
+    player.playerVelocity.x = 0.f;
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
         player.playerVelocity.x = -player.playerSpeed;
@@ -65,8 +67,8 @@ void updateGame(World& world, float clockDeltaSeconds, const sf::Vector2f& TILE_
         }
 
         {
-            world.player.staticObject.rect.top -= world.player.playerVelocity.y * clockDeltaSeconds;
-            CollisionResult collisionResult = handleCollision(world.player.staticObject.rect, world.player.playerVelocity, world.level, EOrientation::Vertical, TILE_SIZE);
+            player.staticObject.rect.top -= player.playerVelocity.y * clockDeltaSeconds;
+            CollisionResult collisionResult = handleCollision(player.staticObject.rect, player.playerVelocity, world.level, EOrientation::Vertical, TILE_SIZE);
 
             if (collisionResult.bIsCollided)
             {
@@ -75,14 +77,32 @@ void updateGame(World& world, float clockDeltaSeconds, const sf::Vector2f& TILE_
                 if (player.playerVelocity.y < 0)
                 {
                     player.bIsPlayerOnGround = true;
-                    player.playerVelocity.x = 0.f;
+                    //player.playerVelocity.x = 0.f;
                 }
 
                 player.playerVelocity.y = 0.f;
             }
         }
 
-        world.player.playerVelocity.x = 0.f;
+        if (std::abs(player.playerVelocity.x) > 0.0001f)
+        {
+            player.playerAnimationDirection = player.playerVelocity.x < 0 ? EPlayerDirection::Left : EPlayerDirection::Right;
+        }
+
+        if (!player.bIsPlayerOnGround)
+        {
+            player.currentAnimation = &player.jumpAnimation;
+        }
+        else if (std::abs(player.playerVelocity.x) > 0.0001f)
+        {
+            player.currentAnimation = &player.walkAnimation;
+        }
+        else
+        {
+            player.currentAnimation = &player.idleAnimation;
+        }
+
+        player.currentAnimation->update(clockDeltaSeconds);
 
         for (Enemy& enemy : world.enemies)
         {
@@ -154,10 +174,28 @@ void drawGame(sf::RenderWindow& window, World& world, const sf::Vector2f TILE_SI
         }
     }
 
-    world.player.staticObject.sprite.setPosition(world.player.staticObject.rect.left, world.player.staticObject.rect.top);
-    window.draw(world.player.staticObject.sprite);
+    Player& player = world.player;
 
-    world.scoreText.setString("SCORE: " + std::to_string(world.player.score));
+    {
+        if (player.currentAnimation != nullptr)
+        {
+            player.staticObject.sprite.setTextureRect(player.currentAnimation->getCurrentFrame());
+        }
+
+        const int SCALE_X_SIGN = player.playerAnimationDirection == EPlayerDirection::Left ? -1 : 1;
+        const float SCALE_X = std::abs(player.staticObject.sprite.getScale().x) * SCALE_X_SIGN;
+        player.staticObject.sprite.setScale(SCALE_X, player.staticObject.sprite.getScale().y);
+
+        const float PLAYER_DRAW_LEFT_POS = player.staticObject.rect.left + player.staticObject.rect.width / 2;
+        const float PLAYER_DRAW_TOP_POS = player.staticObject.rect.top + player.staticObject.rect.height / 2;
+
+        player.staticObject.sprite.setPosition(PLAYER_DRAW_LEFT_POS, PLAYER_DRAW_TOP_POS);
+
+    }
+    
+    window.draw(player.staticObject.sprite);
+
+    world.scoreText.setString("SCORE: " + std::to_string(player.score));
     window.draw(world.scoreText);
 
     window.display();

@@ -2,6 +2,13 @@
 
 #include <SFML/Graphics.hpp>
 #include "StaticObject.h"
+#include "Animation.h"
+
+enum class EPlayerDirection
+{
+    Left,
+    Right
+};
 
 struct Player
 {
@@ -12,4 +19,12 @@ struct Player
     float playerKillEnemyJumpSpeed = 200.f;
     bool bIsPlayerOnGround = false;
     int score = 0;
+
+    Animation idleAnimation;
+    Animation walkAnimation;
+    Animation jumpAnimation;
+
+    Animation* currentAnimation = nullptr;
+
+    EPlayerDirection playerAnimationDirection = EPlayerDirection::Right;
 };

@@ -1,8 +1,8 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "StaticObject.h"
 #include "Animation.h"
+#include "GameObject.h"
 
 enum class EPlayerDirection
 {
@@ -10,9 +10,9 @@ enum class EPlayerDirection
     Right
 };
 
-struct Player
+class Player : public GameObjectLivin
 {
-    StaticObject staticObject;
+public:
     sf::Vector2f playerVelocity;
     float playerSpeed = 200.f;
     float playerJumpSpeed = 520.f;

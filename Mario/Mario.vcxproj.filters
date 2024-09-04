@@ -22,6 +22,12 @@
     <ClCompile Include="Animation.cpp">
       <Filter>Файлы ресурсов</Filter>
     </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Файлы ресурсов</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Файлы ресурсов</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TileTypes.h">
@@ -48,10 +54,13 @@
     <ClInclude Include="Coin.h">
       <Filter>Файлы ресурсов</Filter>
     </ClInclude>
-    <ClInclude Include="StaticObject.h">
+    <ClInclude Include="Animation.h">
       <Filter>Файлы ресурсов</Filter>
     </ClInclude>
-    <ClInclude Include="Animation.h">
+    <ClInclude Include="Camera.h">
+      <Filter>Файлы ресурсов</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
       <Filter>Файлы ресурсов</Filter>
     </ClInclude>
   </ItemGroup>

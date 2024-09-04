@@ -1,12 +1,12 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "StaticObject.h"
+#include "GameObject.h"
 
-struct Enemy
+
+class Enemy : public GameObjectLivin
 {
-    StaticObject staticObject;
+public:
     sf::Vector2f enemyVelocity;
     float enemySpeed = 200.f;
-    bool bDead = false;
 };

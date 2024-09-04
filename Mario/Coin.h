@@ -1,9 +1,9 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "GameObject.h"
 
-struct Coin
+class Coin : public GameObjectLivin
 {
-    StaticObject staticObject;
-    bool bDead = false;
+public:
 };

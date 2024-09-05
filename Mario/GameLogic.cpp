@@ -52,8 +52,8 @@ void updateGame(World& world, float clockDeltaSeconds, const sf::Vector2f& TILE_
     }
 
     {
-        const sf::Vector2f CACHE_PLAYER_VELOCITY = world.player.playerVelocity;
-        Player& player = world.player;
+        const sf::Vector2f CACHE_PLAYER_VELOCITY = world.player->playerVelocity;
+        Player& player = *world.player;
 
         player.playerVelocity.y += world.GRAVITY * clockDeltaSeconds;
 
@@ -75,7 +75,7 @@ void updateGame(World& world, float clockDeltaSeconds, const sf::Vector2f& TILE_
             {
                 player.rect.top = collisionResult.newPosition.y;
 
-                if (player.playerVelocity.y < 0)
+                if (world.player->playerVelocity.y < 0)
                 {
                     player.bIsPlayerOnGround = true;
                 }
@@ -121,7 +121,7 @@ void updateGame(World& world, float clockDeltaSeconds, const sf::Vector2f& TILE_
         {
             if (!enemy->bDead)
             {
-                if (world.player.rect.intersects(enemy->rect))
+                if (world.player->rect.intersects(enemy->rect))
                 {
                     if ((!player.bIsPlayerOnGround) && (player.rect.top < enemy->rect.top) && (CACHE_PLAYER_VELOCITY.y < 0))
                     {
@@ -142,7 +142,7 @@ void updateGame(World& world, float clockDeltaSeconds, const sf::Vector2f& TILE_
         {
             if (!coin->bDead)
             {
-                if (world.player.rect.intersects(coin->rect))
+                if (world.player->rect.intersects(coin->rect))
                 {
                     if ((!player.bIsPlayerOnGround) && (player.rect.top < coin->rect.top) && (CACHE_PLAYER_VELOCITY.y < 0))
                     {
@@ -159,58 +159,12 @@ void drawGame(sf::RenderWindow& window, World& world, const sf::Vector2f TILE_SI
 {
     window.clear();
 
-    for (int i = 0; i < world.level.tiles.size(); ++i)
+    for (GameObject* object : world.objects)
     {
-        for (int j = 0; j < world.level.tiles[i].size(); ++j)
-        {
-            const Tile& tile = world.level.tiles[i][j];
-
-            sf::Vector2f tileDrawPosition = { TILE_SIZE.x * j, TILE_SIZE.y * i };
-            tileDrawPosition -= world.camera.position;
-
-            sf::Sprite& sprite = world.level.tileTextureTypeToSprite[tile.textureType];
-            sprite.setPosition(tileDrawPosition);
-            window.draw(sprite);
-        }
+        object->draw(window);
     }
 
-    for (GameObjectLivin* object : world.objects)
-    {
-        if (!object->bDead)
-        {
-            sf::Vector2f drawPosition = object->rect.getPosition();
-            drawPosition -= world.camera.position;
-            object->sprite.setPosition(drawPosition);
-            window.draw(object->sprite);
-        }
-    }
-
-    Player& player = world.player;
-
-    {
-        if (player.currentAnimation != nullptr)
-        {
-            player.sprite.setTextureRect(player.currentAnimation->getCurrentFrame());
-        }
-
-        const int SCALE_X_SIGN = player.playerAnimationDirection == EPlayerDirection::Left ? -1 : 1;
-        const float SCALE_X = std::abs(player.sprite.getScale().x) * SCALE_X_SIGN;
-        player.sprite.setScale(SCALE_X, player.sprite.getScale().y);
-
-        sf::Vector2f drawPosition = 
-        { 
-            player.rect.left + player.rect.width / 2, 
-            player.rect.top + player.rect.height / 2 
-        };
-
-        drawPosition -= world.camera.position;
-        player.sprite.setPosition(drawPosition);
-
-    }
-    
-    window.draw(player.sprite);
-
-    world.scoreText.setString("SCORE: " + std::to_string(player.score));
+    world.scoreText.setString("SCORE: " + std::to_string(world.player->score));
     window.draw(world.scoreText);
 
     window.display();

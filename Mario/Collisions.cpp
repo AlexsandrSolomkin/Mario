@@ -20,7 +20,7 @@ CollisionResult handleCollision(
     {
         for (int j = X_LEFT_TILE; j <= xRightTile; ++j)
         {
-            const Tile& TILE = LEVEL.tiles[i][j];
+            const Tile& TILE = *LEVEL.tiles[i][j];
             const sf::Vector2f TILE_POSITION = sf::Vector2f(j * TILE_SIZE.x, i * TILE_SIZE.y);
 
             if (TILE.collisionType == ETileCollisionType::Collision)

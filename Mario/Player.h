@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "Animation.h"
-#include "GameObject.h"
+#include "GameObjectLiving.h"
 
 enum class EPlayerDirection
 {
@@ -10,8 +10,10 @@ enum class EPlayerDirection
     Right
 };
 
-class Player : public GameObjectLivin
+class Player : public GameObjectLiving
 {
+public:
+    void draw(sf::RenderWindow& window) override;
 public:
     sf::Vector2f playerVelocity;
     float playerSpeed = 200.f;

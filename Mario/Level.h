@@ -1,19 +1,29 @@
 #pragma once
 
-#include "TileTypes.h"
 #include <SFML/Graphics.hpp>
-#include <string>
+#include <map>
+#include <vector>
+#include "TileTypes.h"
+#include "GameObject.h"
 
-struct Tile
+class Tile : public GameObject
 {
+public:
+    void draw(sf::RenderWindow& window) override;
+
+public:
     ETileTextureType textureType;
     ETileCollisionType collisionType;
+
+    sf::Vector2i tilePosition;
 };
 
 struct Level
 {
-    std::vector<std::vector<Tile>> tiles;
+    std::vector<std::vector<Tile*>> tiles;
     std::map<ETileTextureType, sf::Sprite> tileTextureTypeToSprite;
+
+    sf::Vector2f tileSize;
 };
 
 struct LevelDescriptor
@@ -23,4 +33,4 @@ struct LevelDescriptor
     std::map<ETileTextureType, sf::IntRect> tileTextureTypeToTextureRect;
 };
 
-Level createLevel(const LevelDescriptor& LEVEL_DESCRIPTOR, sf::Vector2f tileScale);
+Level createLevel(World& world, const LevelDescriptor& LEVEL_DESCRIPTOR, sf::Vector2f tileScale, sf::Vector2f tileSize);

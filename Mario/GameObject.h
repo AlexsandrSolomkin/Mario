@@ -2,21 +2,27 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
+namespace sf
+{
+	class RenderWindow;
+}
+
+class World;
+
 class GameObject
 {
 public:
+	virtual void draw(sf::RenderWindow& window)
+	{
+
+	}
+
+public:
 	sf::FloatRect rect;
+	World* world = nullptr;
 
 protected:
-
-
+	
 private:
 
-};
-
-class GameObjectLivin : public GameObject
-{
-public:
-	sf::Sprite sprite;
-	bool bDead = false;
 };
